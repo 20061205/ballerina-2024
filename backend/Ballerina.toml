@@ -1,0 +1,18 @@
+[package]
+org = "acer"
+name = "backend"
+version = "0.1.0"
+distribution = "2201.10.0"
+
+[build-options]
+observabilityIncluded = true
+
+[[platform.java11.dependency]]
+groupId = "mysql"
+artifactId = "mysql-connector-java"
+version = "8.0.26"
+
+[[dependency]]
+org = "ballerinax"
+name = "mysql"
+version = "1.10.0"
