@@ -1,0 +1,3 @@
+[submodule "frontend/frontend"]
+	path = frontend/frontend
+	url = https://github.com/20061205/ballerina-2024.git
