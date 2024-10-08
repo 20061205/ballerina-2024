@@ -1,7 +1,6 @@
 import ballerina/http;
 import ballerinax/mysql;
 import ballerina/sql;
-//import ballerina/time;
 
 // Database configuration
 // Database configuration
@@ -190,5 +189,41 @@ service / on new http:Listener(8080) {
     
     resource function delete orders/[int id]() returns boolean|error {
         return deleteOrder(id);
+    }
+
+    //check database conectovity
+    resource function get testCreate() returns int|error {
+        User testUser = {
+            first_name: "Test",
+            last_name: "User",
+            username: "testuser",
+            password: "password123",
+            email: "test@example.com",
+            user_type: "customer",
+            phone_number: "1234567890"
+        };
+        return createUser(testUser);
+    }
+
+    resource function get testRead/[int id]() returns User|error {
+        return getUserById(id);
+    }
+
+    resource function get testUpdate/[int id]() returns boolean|error {
+        User updatedUser = {
+            user_ID: id,
+            first_name: "Updated",
+            last_name: "User",
+            username: "updateduser",
+            password: "newpassword123",
+            email: "updated@example.com",
+            user_type: "customer",
+            phone_number: "0987654321"
+        };
+        return updateUser(updatedUser);
+    }
+
+    resource function get testDelete/[int id]() returns boolean|error {
+        return deleteUser(id);
     }
 }
