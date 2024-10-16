@@ -1,24 +1,28 @@
-// src/App.js
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-//import Navbar from './components/Navbar';
-import ProductList from './components/ProductList';
-import ProductDetail from './components/ProductDetail';
-// import Cart from './components/Cart';
-// import Checkout from './components/Checkout';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import Menu from './pages/Menu';
+import Order from './pages/Order';
+import Cart from './pages/Cart';
+import './App.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        {/* <Navbar /> */}
-        <Routes>
-          <Route path="/" element={<ProductList />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-         {/* // <Route path="/cart" element={<Cart />} />
-         // <Route path="/checkout" element={<Checkout />} /> */}
-        </Routes>
+        <Navbar />
+        <main className="content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/order" element={<Order />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
+        </main>
+        <footer className="footer">
+          <p>&copy; 2024 Juice & Fruit Salad Bar. All rights reserved.</p>
+        </footer>
       </div>
     </Router>
   );
