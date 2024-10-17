@@ -1,0 +1,15 @@
+### Get Content from /chatbot/getContent
+POST http://localhost:8080/chatbot/getContent
+Content-Type: application/json
+
+{
+    "request": "example"
+}
+
+### Get Content from /chatbot/getContent
+GET http://localhost:8080/juiceBar/getProducts
+Content-Type: application/json
+
+{
+    "request": "example"
+}
