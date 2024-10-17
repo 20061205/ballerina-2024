@@ -5,6 +5,9 @@ import Home from './pages/Home';
 import Menu from './pages/Menu';
 import Order from './pages/Order';
 import Cart from './pages/Cart';
+import SignIn from './pages/signin';
+import SignUp from './pages/signup';
+import ProductDetail from './components/ProductDetail';
 import './App.css';
 
 function App() {
@@ -18,6 +21,10 @@ function App() {
             <Route path="/menu" element={<Menu />} />
             <Route path="/order" element={<Order />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+
           </Routes>
         </main>
         <footer className="footer">

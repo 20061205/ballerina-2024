@@ -7,9 +7,17 @@ function ProductDetail() {
   const { id } = useParams();
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/products/${id}`)
-      .then(response => setProduct(response.data))
-      .catch(error => console.error('Error fetching product:', error));
+    const fetchProduct = async () => {
+      console.log('Fetching product:', id);
+      try {
+        const response = await axios.get(`http://localhost:8080/juiceBar/getProductbyID?Product_id=${id}`);
+        setProduct(response.data);
+      } catch (error) {
+      console.error('Error fetching product:', error);
+      }
+    };
+
+    fetchProduct();
   }, [id]);
 
   if (!product) return <div>Loading...</div>;

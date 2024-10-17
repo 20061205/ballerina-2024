@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function ProductList() {
   const [products, setProducts] = useState([]);
@@ -16,9 +17,11 @@ function ProductList() {
 
   console.log(products);
 
+  const navigate = useNavigate();
+
   const handleViewItem = (item) => {
-    // Logic to display product details can be added here
-    console.log('Viewing item:', item);
+    console.log('View item:', item);
+    navigate(`/product/${item.product_ID}`);
   };
 
   return (
