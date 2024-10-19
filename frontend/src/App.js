@@ -8,6 +8,7 @@ import Order from './pages/Order';
 import SignIn from './pages/signin';
 import SignUp from './pages/signup';
 import Profile from './pages/Profile';
+import MakeOrder from './pages/makeorder';
 import ProductDetail from './components/ProductDetail';
 import './App.css';
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/makeorder/:id" element={<MakeOrder />} />
 
           </Routes>
         </main>

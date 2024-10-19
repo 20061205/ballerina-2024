@@ -19,3 +19,27 @@ Content-Type: application/json
 ### get user by id
 GET http://localhost:8080/juiceBar/getUserDetails?User_id=1
 Content-Type: application/json
+
+### Submit Order
+POST http://localhost:8080/juiceBar/submitItem
+Content-Type: application/json
+
+{
+    "order_id": 1,
+    "productId": 1,
+    "quantity": 1
+}
+### Submit Order
+POST http://localhost:8080/juiceBar/submitOrder
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "status_id": 1,
+    "ordered_date": "2024-10-19",
+    "ordered_time": "10:57:28",
+    "dilivary_time": "12:00:00"
+}
+
+### Delete Order
+DELETE http://localhost:8080/juiceBar/deleteOrder?order_id=12
