@@ -349,3 +349,64 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
+/* Navigation bar */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #18d159;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: bolder;
+  font-family: Georgia, 'Times New Roman', Times, serif ;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+}
+
+.navbar-links li {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: #333;
+}
+
+.logout-button {
+  background-color: transparent;
+  border: none;
+  color: #0d3d07;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.logout-button:hover {
+  color: #075220;
+}
+
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Profile styles */
+
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: 10px;
+}

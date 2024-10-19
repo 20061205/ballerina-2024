@@ -226,5 +226,33 @@ service /juiceBar on new http:Listener(8080) {
         }
     }
 
+     resource function get getUserDetails(http:Caller caller, http:Request req) returns error? {
+        var userIdParam = req.getQueryParamValue("user_id");
+        io:print("\nuser   id",userIdParam);
+        if userIdParam is string {
+            int userId = check 'int:fromString(userIdParam);
+
+           io:print("\nuser id",userId);
+            stream<record {|anydata...;|}, sql:Error?> resultStream = pool->query(`SELECT * FROM users WHERE user_ID = ${userId}`);
+            json[] resultJson = [];
+
+            check resultStream.forEach(function(record {|anydata...;|} row) {
+                map<json> rowJson = {};
+                foreach var [key, value] in row.entries() {
+                    rowJson[key] = <json>value;
+                }
+                resultJson.push(rowJson);
+            });
+
+            if (resultJson.length() > 0) {
+                check caller->respond(resultJson[0]);
+            } else {
+                check caller->respond({ "error": "User not found" });
+            }
+        } else {
+            check caller->respond({ "error": "user_id query parameter is missing or invalid" });
+        }
+    }
+
     
 }

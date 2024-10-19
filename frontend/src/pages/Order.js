@@ -4,7 +4,7 @@ import '../App.css'
 function Order() {
   const [products, setProducts] = useState([]);
   const [order, setOrder] = useState({
-    user_id: '1', // You might want to get this from user authentication
+    user_id: localStorage.getItem('user_id') , // Get user_id from local storage or default to '1'
     products: []
   });
   const [customerOrders, setCustomerOrders] = useState([]);

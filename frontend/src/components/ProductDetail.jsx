@@ -28,7 +28,7 @@ function ProductDetail() {
       <img src={product.image} alt={product.altText} />
       <p>Price: ${product.unit_price}</p>
       <p>Available: {product.availability ? 'Yes' : 'No'}</p>
-      <button>Add to Cart</button>
+      <button>Order now</button>
     </div>
   );
 }

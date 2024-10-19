@@ -24,6 +24,8 @@
 
 // export default SignIn;
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import '../App.css';
 
 const SignIn = () => {
@@ -33,6 +35,7 @@ const SignIn = () => {
     });
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -58,7 +61,14 @@ const SignIn = () => {
                 setMessage('Login successful!');
                 setIsError(false);
                 console.log('User details:', data);
+                // Save user_id to localStorage
+                localStorage.setItem('user_id', data.user_ID);
+                localStorage.setItem('firstname', data.first_name);
+                // Trigger a custom event to notify other components about the login status change
+                const loginEvent = new CustomEvent('userLoggedIn', { detail: data });
+                window.dispatchEvent(loginEvent);
                 // Redirect to another page or perform other actions
+                navigate('/');
             } else {
                 setMessage('Invalid login credentials. Please try again.');
                 setIsError(true);
