@@ -1,6 +1,6 @@
 create database juice_shop;
 use juice_shop;
-CREATE TABLE `user` (
+CREATE TABLE `users` (
   `user_ID` INT auto_increment,
   `first_name` varchar(20),
   `last_name` varchar(20),
@@ -34,7 +34,7 @@ CREATE TABLE `order` (
   `status_id` int,
   `ordered_date` date,
   `ordered_time` time,
-  `expriory_date` time,
+  `dilivary_time` time,
   PRIMARY KEY (`order_id`),
   FOREIGN KEY (`status_id`) REFERENCES `order_status`(`status_id`),
   FOREIGN KEY (`user_id`) REFERENCES `user`(`user_ID`),
@@ -51,4 +51,14 @@ CREATE TABLE `order -item` (
   FOREIGN KEY (`product_id`) REFERENCES `products`(`product_ID`)
 );
 
+DELIMITER $$
 
+CREATE TRIGGER update_expire_time
+BEFORE INSERT ON `order`
+FOR EACH ROW
+BEGIN
+    -- Update expire_time to 30 minutes after manufactured_time
+    SET NEW.dilivary_time = DATE_ADD(NEW.ordered_time, INTERVAL 30 MINUTE);
+END $$
+
+DELIMITER ;

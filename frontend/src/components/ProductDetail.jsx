@@ -25,6 +25,7 @@ function ProductDetail() {
   return (
     <div className="product-detail">
       <h2>{product.product_name}</h2>
+      <img src={product.image} alt={product.altText} />
       <p>Price: ${product.unit_price}</p>
       <p>Available: {product.availability ? 'Yes' : 'No'}</p>
       <button>Add to Cart</button>

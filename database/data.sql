@@ -1,6 +1,6 @@
 use juice_shop;
 -- Inserting sample users
-INSERT INTO `user` (first_name, last_name, username, password, email, user_type, phone_number)
+INSERT INTO `users` (first_name, last_name, username, password, email, user_type, phone_number)
 VALUES 
 ('John', 'Doe', 'johndoe', 'password123', 'john.doe@example.com', 'customer', '1234567890'),
 ('Jane', 'Smith', 'janesmith', 'securepass', 'jane.smith@example.com', 'customer', '9876543210'),
