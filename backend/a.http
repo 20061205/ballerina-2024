@@ -1,15 +1,21 @@
-### Get Content from /chatbot/getContent
-POST http://localhost:8080/chatbot/getContent
+### Register User
+POST http://localhost:8080/juiceBar/registerUser
 Content-Type: application/json
 
 {
-    "request": "example"
+    "first_name": "hansi",
+    "last_name": "lakmali",
+    "username": "hanej,cesi",
+    "password": "12344",
+    "email": "hihijsjjj@gmail.com",
+    "user_type": "ty",
+    "phone_number": "089763"
 }
 
-### Get Content from /chatbot/getContent
-GET http://localhost:8080/juiceBar/getProducts
+### Get Orders by Customer ID
+GET http://localhost:8080/juiceBar/getOrdersByCustomerID?Customer_id=1
 Content-Type: application/json
 
-{
-    "request": "example"
-}
+### get user by id
+GET http://localhost:8080/juiceBar/getUserDetails?User_id=1
+Content-Type: application/json

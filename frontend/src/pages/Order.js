@@ -1,26 +1,40 @@
 import React, { useState, useEffect } from 'react';
+import '../App.css'
 
 function Order() {
   const [products, setProducts] = useState([]);
   const [order, setOrder] = useState({
-    user_id: '1', // You might want to get this from user authentication
+    user_id: localStorage.getItem('user_id') , // Get user_id from local storage or default to '1'
     products: []
   });
+  const [customerOrders, setCustomerOrders] = useState([]);
 
   useEffect(() => {
-    // Fetch products from your Ballerina backend
-    fetch('http://localhost:8080/products')
+    // Fetch customer orders from your Ballerina backend
+    fetch(`http://localhost:8080/juiceBar/getOrdersByCustomerID?Customer_id=${order.user_id}`)
       .then(response => response.json())
-      .then(data => setProducts(data))
-      .catch(error => console.error('Error fetching products:', error));
-  }, []);
-
-  const handleAddToOrder = (product) => {
-    setOrder(prevOrder => ({
-      ...prevOrder,
-      products: [...prevOrder.products, { ...product, quantity: 1 }]
-    }));
-  };
+      .then(data => {
+        if (Array.isArray(data)) {
+          // Group products by order_id
+          const orders = data.reduce((acc, item) => {
+            const order = acc.find(o => o.order_id === item.order_id);
+            if (order) {
+              order.products.push(item);
+            } else {
+              acc.push({ ...item, products: [item] });
+            }
+            return acc;
+          }, []);
+          setCustomerOrders(orders);
+        } else {
+          setCustomerOrders([]);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching customer orders:', error);
+        setCustomerOrders([]);
+      });
+  }, [order.user_id]);
 
   const handleRemoveFromOrder = (productId) => {
     setOrder(prevOrder => ({
@@ -29,41 +43,13 @@ function Order() {
     }));
   };
 
-  const handleSubmitOrder = () => {
-    // Send order to your Ballerina backend
-    fetch('http://localhost:8080/orders', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(order),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Order submitted:', data);
-      // Clear the order after submission
-      setOrder({ user_id: '1', products: [] });
-    })
-    .catch(error => console.error('Error submitting order:', error));
+  const handleExtendOrder = (orderId) => {
+    // Logic to extend the order within the first 30 minutes
+    console.log(`Extend order with ID: ${orderId}`);
   };
 
   return (
-    <div className="order">
-      <h2>Place Your Order</h2>
-      <div className="product-list">
-        {products.map(product => (
-          <div key={product.product_ID} className="product-item">
-            <h3>{product.product_name}</h3>
-            <p>Price: ${product.unit_price}</p>
-            <button 
-              onClick={() => handleAddToOrder(product)} 
-              disabled={!product.availability}
-            >
-              {product.availability ? 'Add to Order' : 'Out of Stock'}
-            </button>
-          </div>
-        ))}
-      </div>
+    <div className="order-container">
       <div className="order-summary">
         <h3>Order Summary</h3>
         {order.products.map(item => (
@@ -72,9 +58,28 @@ function Order() {
             <button onClick={() => handleRemoveFromOrder(item.product_ID)}>Remove</button>
           </div>
         ))}
-        <button onClick={handleSubmitOrder} disabled={order.products.length === 0}>
-          Submit Order
-        </button>
+      </div>
+      <div className="customer-orders">
+        <h3>Your Orders</h3>
+        {customerOrders.length > 0 ? (
+          customerOrders.map(order => (
+            <div key={order.order_id} className="customer-order">
+             
+              <p>Date: {order.ordered_date}</p>
+              <div className="order-items">
+                {order.products.map(product => (
+                  <div key={product.product_ID} className="order-item">
+                    <img src={product.image} alt={product.product_name} className="product-image" />
+                    <span>{product.product_name} - ${product.unit_price}</span>
+                  </div>
+                ))}
+              </div>
+              <button onClick={() => handleExtendOrder(order.order_id)}>Extend Order</button>
+            </div>
+          ))
+        ) : (
+          <p>No orders found.</p>
+        )}
       </div>
     </div>
   );
