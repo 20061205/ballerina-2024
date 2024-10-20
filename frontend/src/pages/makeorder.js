@@ -231,6 +231,7 @@ function MakeOrder() {
       }
     } catch (error) {
       console.error('Error submitting order:', error);
+      navigate('/signup'); // Redirect to error page
     }
   };
 

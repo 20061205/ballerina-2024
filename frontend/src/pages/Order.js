@@ -30,6 +30,7 @@ function Order() {
         } else {
           setCustomerOrders([]);
         }
+        console.log('Customer orders:', data);
       })
       .catch(error => {
         console.error('Error fetching customer orders:', error);
@@ -105,10 +106,18 @@ function Order() {
                     console.error('Error extending order:', error);
                   }
                 };
-  const isButtonDisabled = (deliveryTime) => {
+    const isButtonDisabled = (orderdate, orderedtime) => {
     const currentTime = new Date();
-    const orderDeliveryTime = new Date(deliveryTime);
+    let orderDeliveryTime = new Date(orderedtime);
+    let orderDeliverydate = new Date(orderdate);
+    console.log("orderDeliveryTime",orderDeliveryTime);
+    console.log("orderDeliverydate",orderDeliverydate);
+    // Construct a valid date-time string
+    orderDeliveryTime = new Date(`${orderDeliverydate.toISOString().split('T')[0]}T${orderDeliveryTime.toTimeString().split(' ')[0]}`);
+    console.log('Order delivery time:', orderDeliveryTime);
+  
     const timeDifference = (currentTime - orderDeliveryTime) / 60000; // Difference in minutes
+    console.log('Time difference:', timeDifference);
     return timeDifference > 30;
   };
 
@@ -141,7 +150,7 @@ function Order() {
                   </div>
                 ))}
               </div>
-              {!isButtonDisabled(order.dilivary_time) && (
+              {!isButtonDisabled(order.ordered_date,order.ordered_time) && (
                 <>
                 <p>Extend your delivery time by 15 minutes or remove your order.</p>
                   <button onClick={() => handleExtendOrder(order.order_id)}>Extend Order</button>
