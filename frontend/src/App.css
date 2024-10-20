@@ -1,3 +1,9 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
 .App {
   font-family: Arial, sans-serif;
   max-width: 1200px;
@@ -409,4 +415,53 @@ button:hover {
   border-radius: 50%;
   cursor: pointer;
   margin-left: 10px;
+}
+
+/* productlist css */
+.product-list {
+  width: 100%;
+  padding: 16px;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Force 3 equal columns */
+  gap: 16px;
+  width: 100%;
+}
+
+.featured-item {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds card-like shadow */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.featured-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.featured-item h3, .featured-item p {
+  margin: 8px 0;
+}
+
+.featured-item button {
+  margin-top: auto;
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.featured-item button:hover {
+  background-color: #0056b3;
 }

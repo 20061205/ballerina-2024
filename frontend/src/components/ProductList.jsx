@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../App.css';
 
 function ProductList() {
   const [products, setProducts] = useState([]);
@@ -27,14 +28,12 @@ function ProductList() {
   return (
     <div className="product-list">
       <h2>Our Juices</h2>
-      
-      <div className="featured-grid" style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+  
+      <div className="featured-grid">
         {products.map((item, index) => (
-          <div className="featured-item" key={index} style={{ flex: '1 1 calc(33.333% - 16px)', boxSizing: 'border-box', border: '1px solid #ccc', padding: '16px', borderRadius: '8px' }}>
-            <img src={item.image} alt={item.altText} style={{ width: '100%', height: 'auto' }} />
+          <div className="featured-item" key={index}>
+            <img src={item.image} alt={item.altText || item.product_name} />
             <h3>{item.product_name}</h3>
-            <h3>{item.title}</h3>
-            <p>{item.description}</p>
             <p>{item.availability ? 'In Stock' : 'Out of Stock'}</p>
             <p>Price: ${item.unit_price}</p>
             <button className="btn btn-primary" onClick={() => handleViewItem(item)}>View item</button>
@@ -43,6 +42,7 @@ function ProductList() {
       </div>
     </div>
   );
+  
 }
 
 export default ProductList;

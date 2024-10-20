@@ -1,28 +1,3 @@
-// import React from 'react';
-// import '../App.css';
-
-// const SignIn = () => {
-//     return (
-//         <div className="signin-container">
-//             <div className="signin-form">
-//                 <h2>Sign In</h2>
-//                 <form>
-//                     <div className="input-group">
-//                         <label htmlFor="email">Email</label>
-//                         <input type="email" id="email" name="email" required />
-//                     </div>
-//                     <div className="input-group">
-//                         <label htmlFor="password">Password</label>
-//                         <input type="password" id="password" name="password" required />
-//                     </div>
-//                     <button type="submit">Sign In</button>
-//                 </form>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default SignIn;
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -67,8 +42,12 @@ const SignIn = () => {
                 // Trigger a custom event to notify other components about the login status change
                 const loginEvent = new CustomEvent('userLoggedIn', { detail: data });
                 window.dispatchEvent(loginEvent);
-                // Redirect to another page or perform other actions
-                navigate('/');
+                // Redirect based on user type
+                if (data.user_type === 'admin') {
+                    navigate('/admin');
+                } else {
+                    navigate('/');
+                }
             } else {
                 setMessage('Invalid login credentials. Please try again.');
                 setIsError(true);

@@ -120,7 +120,7 @@ service /juiceBar on new http:Listener(8080) {
             int customerId = check 'int:fromString(customerIdParam);
 
             // Execute the SQL query with the provided customer ID
-            stream<record {|anydata...;|}, sql:Error?> resultStream = pool->query(`SELECT * FROM customer_orders left outer join order_items using (order_id) left outer join products on products.product_ID=order_items.product_id  WHERE customer_orders.user_id =${customerId}`);
+            stream<record {|anydata...;|}, sql:Error?> resultStream = pool->query(`SELECT * FROM customer_orders left outer join order_items using (order_id) left outer join products on products.product_ID=order_items.product_id left outer join order_status using (status_id) WHERE customer_orders.user_id =${customerId}`);
             json[] resultJson = [];
 
             // Process the result stream and build the JSON response
@@ -374,9 +374,92 @@ service /juiceBar on new http:Listener(8080) {
         }
     }
 
-    resource function put extendOrder(http:Caller caller, http:Request req) returns error? {
+       resource function post extendOrder(http:Caller caller, http:Request req) returns error? {
         json payload;
         var jsonResult = req.getJsonPayload();
+        
+        if (jsonResult is json) {
+            payload = jsonResult;
+        } else {
+            http:Response response = new;
+            response.statusCode = 400;
+            response.reasonPhrase = "Bad Request";
+            response.setPayload({ "error": "Invalid JSON payload" });
+            check caller->respond(response);
+            return;
+        }
+        io:println(payload);
+    
+        int orderId = check 'int:fromString((check payload.order_id).toString());
+        // Assuming the new delivery time is calculated and passed in the payload
+        string newDilivaryTime = (check payload.new_dilivary_time).toString();
+        io:println("time", newDilivaryTime);
+    
+       // sql:ParameterizedQuery query = `UPDATE customer_orders SET dilivary_time = ? WHERE order_id = ?`;
+        var result = pool->execute(`UPDATE customer_orders SET dilivary_time = ${newDilivaryTime} WHERE order_id = ${orderId}`);
+    
+        if (result is sql:ExecutionResult) {
+            // Send a success response back to the client
+            http:Response response = new;
+            response.statusCode = 200;
+            response.reasonPhrase = "OK";
+            response.setPayload({ "new_dilivary_time": newDilivaryTime });
+            check caller->respond(response);
+        } else {
+            // Send an error response if the update fails
+            http:Response response = new;
+            response.statusCode = 500;
+            response.reasonPhrase = "Internal Server Error";
+            response.setPayload({ "error": "Failed to extend order" });
+            check caller->respond(response);
+        }
+    }
+
+          resource function get getAllOrders(http:Caller caller, http:Request req) returns error? {
+        stream<record {| 
+            int order_id; 
+            int user_id; 
+            string ordered_date; 
+            string ordered_time; 
+            string dilivary_time; 
+            int status_id; 
+            string status; 
+            decimal? total_price; 
+            string description;
+        |}, sql:Error?> resultStream = pool->query(`SELECT * FROM customer_orders LEFT OUTER JOIN Order_status USING (status_id)`);
+    
+        json[] resultJson = [];
+        check resultStream.forEach(function(record {| anydata...; |} row) {
+            map<json> rowJson = {};
+            foreach var [key, value] in row.entries() {
+                rowJson[key] = <json>value;
+            }
+            resultJson.push(rowJson);
+        });
+    
+        check caller->respond(resultJson);
+    }
+
+     resource function get getStatuses(http:Caller caller, http:Request req) returns error? {
+        sql:ParameterizedQuery query = `SELECT * FROM order_status`;
+        stream<record {| int status_id; string status; string description; |}, sql:Error?> resultStream = pool->query(query);
+
+        json[] resultJson = [];
+        check resultStream.forEach(function(record {| anydata...; |} row) {
+            map<json> rowJson = {};
+            foreach var [key, value] in row.entries() {
+                rowJson[key] = <json>value;
+            }
+            resultJson.push(rowJson);
+        });
+
+        check caller->respond(resultJson);
+    }
+
+     resource function post updateOrderStatus(http:Caller caller, http:Request req) returns error? {
+        json payload;
+        var jsonResult = req.getJsonPayload();
+        io:println("Hi",jsonResult);
         if (jsonResult is json) {
             payload = jsonResult;
         } else {
@@ -390,24 +473,23 @@ service /juiceBar on new http:Listener(8080) {
         io:println(payload);
 
         int orderId = check 'int:fromString((check payload.order_id).toString());
-        // Assuming the new delivery time is calculated and passed in the payload
-        string newDilivaryTime = (check payload.new_dilivary_time).toString();
+        int statusId = check 'int:fromString((check payload.status_id).toString());
 
-       
-        var result = pool->execute(`UPDATE customer_orders SET dilivary_time = ${newDilivaryTime} WHERE order_id = ${orderId}`);
- if (result is sql:ExecutionResult) {
+       io:println(orderId, statusId);
+        var result = pool->execute(`UPDATE customer_orders SET status_id = ${statusId} WHERE order_id = ${orderId}` );
+         if (result is sql:ExecutionResult) {
             // Send a success response back to the client
             http:Response response = new;
             response.statusCode = 200;
             response.reasonPhrase = "OK";
-            response.setPayload({ "new_dilivary_time": newDilivaryTime });
+            response.setPayload({ "message": "Order status updated successfully" });
             check caller->respond(response);
         } else {
             // Send an error response if the update fails
             http:Response response = new;
             response.statusCode = 500;
             response.reasonPhrase = "Internal Server Error";
-            response.setPayload({ "error": "Failed to extend order" });
+            response.setPayload({ "error": "Failed to update order status" });
             check caller->respond(response);
         }
     }
