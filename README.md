@@ -2,8 +2,10 @@
 
 This project is a full-stack application for a juice shop, consisting of a backend built with Ballerina and a frontend built with React.
 
-## Project Structure
+## Overview of the problem and Introduction to the project
+For our project, we have decided to build a website for a juice bar. The purpose of the project was to enhance the efficiency of the juice bar's ordering and management process, ultimately saving time for the shop's customers. Through our website, we offer solutions to the problem of customers having to wait after placing their order. Also, our website makes work easier for the staff by reducing long queues and the rush during peak business hours.
 
+## Project Structure
 
 ## Functionalities
 
