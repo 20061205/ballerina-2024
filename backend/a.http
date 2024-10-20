@@ -43,3 +43,37 @@ Content-Type: application/json
 
 ### Delete Order
 DELETE http://localhost:8080/juiceBar/deleteOrder?order_id=12
+
+### Extend Order
+PUT http://localhost:8080/juiceBar/extendOrder
+Content-Type: application/json
+
+{
+    "order_id": 1,
+    "new_dilivary_time": "14:00:00"
+}
+
+### Get All Orders
+GET http://localhost:8080/juiceBar/getAllOrders
+
+###
+
+GET http://localhost:8080/juiceBar/getStatuses
+
+### Update Order Status
+PUT http://localhost:8080/juiceBar/updateOrderStatus
+Content-Type: application/json
+
+{
+    "order_id": 3,
+    "status_id": 1
+}
+
+### Extend Order
+POST http://localhost:8080/juiceBar/extendOrder
+Content-Type: application/json
+
+{
+    "order_id": 1,
+    "new_dilivary_time": "14:00:00"
+}

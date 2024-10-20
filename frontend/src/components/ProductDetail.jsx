@@ -32,7 +32,7 @@ function ProductDetail() {
     <div className="product-detail">
       <h1>Product Detail</h1>
       <h2>{product.product_name}</h2>
-      <img src={product.image} alt={product.altText} />
+      <img src={product.image} alt={product.altText} style={{ width: '300px', height: '300px' }} />
       <p>Price: ${product.unit_price}</p>
       <p>Available: {product.availability ? 'Yes' : 'No'}</p>
       <button onClick={handleOrderNow}>Order now</button>

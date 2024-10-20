@@ -115,15 +115,31 @@ const Signup = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="user_type">User Type</label>
-                    <input
-                        type="text"
-                        id="user_type"
-                        name="user_type"
-                        value={formData.user_type}
-                        onChange={handleChange}
-                        required
-                    />
+                    <label>User Type</label>
+                    <div>
+                        <input
+                            type="radio"
+                            id="customer"
+                            name="user_type"
+                            value="customer"
+                            checked={formData.user_type === 'customer'}
+                            onChange={handleChange}
+                            required
+                        />
+                        <label htmlFor="customer">Customer</label>
+                    </div>
+                    <div>
+                        <input
+                            type="radio"
+                            id="admin"
+                            name="user_type"
+                            value="admin"
+                            checked={formData.user_type === 'admin'}
+                            onChange={handleChange}
+                            required
+                        />
+                        <label htmlFor="admin">Admin</label>
+                    </div>
                 </div>
                 <div className="form-group">
                     <label htmlFor="phone_number">Phone Number</label>

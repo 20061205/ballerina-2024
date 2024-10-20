@@ -47,8 +47,7 @@ function Order() {
   const handleRemoveOrder = async (orderId) => {
     console.log('Removing order:', orderId);
     try {
-      const response = await axios.post(`http://localhost:8080/juiceBar/deleteOrder?order_id=${orderId}
-`);
+      const response = await axios.post(`http://localhost:8080/juiceBar/deleteOrder?order_id=${orderId}`);
       if (response.status === 200) {
         setCustomerOrders(prevOrders => prevOrders.filter(order => order.order_id !== orderId));
         console.log(`Order with ID: ${orderId} removed successfully.`);
@@ -60,20 +59,57 @@ function Order() {
     }
   };
 
-  const handleExtendOrder = async (orderId) => {
-    try {
-      const response = await axios.put(`http://localhost:8080/juiceBar/extendOrder`, { order_id: orderId });
-      if (response.status === 200) {
-        setCustomerOrders(prevOrders => prevOrders.map(order => 
-          order.order_id === orderId ? { ...order, dilivary_time: response.data.new_dilivary_time } : order
-        ));
-        console.log(`Order with ID: ${orderId} extended successfully.`);
-      } else {
-        console.error('Error extending order:', response.data);
-      }
-    } catch (error) {
-      console.error('Error extending order:', error);
-    }
+                              const handleExtendOrder = async (orderId) => {
+                  try {
+                    const orderToExtend = customerOrders.find(order => order.order_id === orderId);
+                    if (!orderToExtend) {
+                      console.error('Order not found');
+                      return;
+                    }
+                    console.log('Extending order:', orderToExtend);
+                
+                    // Ensure the delivery time is in a valid format
+                    let currentDeliveryTime = orderToExtend.dilivary_time;
+                    if (typeof currentDeliveryTime === 'string') {
+                      // Construct a valid date-time string
+                      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+                      currentDeliveryTime = new Date(`${today}T${currentDeliveryTime}`);
+                    }
+                    console.log('Current delivery time:', currentDeliveryTime);
+                
+                    if (isNaN(currentDeliveryTime.getTime())) {
+                      console.error('Invalid delivery time format:', orderToExtend.dilivary_time);
+                      return;
+                    }
+                
+                    // Extend the delivery time by 15 minutes
+                    const newDeliveryTime = new Date(currentDeliveryTime.getTime() + 15 * 60000); // Add 15 minutes
+                    newDeliveryTime.setSeconds(0, 0); // Set seconds and milliseconds to 0
+                    const newDeliveryTimeString = newDeliveryTime.toTimeString().split(' ')[0]; // Get only the time part
+                    console.log('New delivery time:', newDeliveryTimeString);
+                
+                    const response = await axios.post('http://localhost:8080/juiceBar/extendOrder', {
+                      order_id: orderId,
+                      new_dilivary_time: newDeliveryTimeString
+                    });
+                    console.log('Response:', response);
+                    if (response.status === 200) {
+                      setCustomerOrders(prevOrders => prevOrders.map(order => 
+                        order.order_id === orderId ? { ...order, dilivary_time: newDeliveryTimeString } : order
+                      ));
+                      console.log(`Order with ID: ${orderId} extended successfully.`);
+                    } else {
+                      console.error('Error extending order:', response.data);
+                    }
+                  } catch (error) {
+                    console.error('Error extending order:', error);
+                  }
+                };
+  const isButtonDisabled = (deliveryTime) => {
+    const currentTime = new Date();
+    const orderDeliveryTime = new Date(deliveryTime);
+    const timeDifference = (currentTime - orderDeliveryTime) / 60000; // Difference in minutes
+    return timeDifference > 30;
   };
 
   return (
@@ -96,6 +132,7 @@ function Order() {
               <p><strong>Order Date:</strong> {order.ordered_date}</p>
               <p><strong>Delivery Time:</strong> {order.dilivary_time}</p>
               <p><strong>Total Price:</strong> ${order.total_price}</p>
+              <p><strong>Order status:</strong> {order.Status}</p>
               <div className="order-items">
                 {order.products.map(product => (
                   <div key={product.product_ID} className="order-item">
@@ -104,8 +141,13 @@ function Order() {
                   </div>
                 ))}
               </div>
-              <button onClick={() => handleExtendOrder(order.order_id)}>Extend Order</button>
-              <button onClick={() => handleRemoveOrder(order.order_id)}>Remove Order</button>
+              {!isButtonDisabled(order.dilivary_time) && (
+                <>
+                <p>Extend your delivery time by 15 minutes or remove your order.</p>
+                  <button onClick={() => handleExtendOrder(order.order_id)}>Extend Order</button>
+                  <button onClick={() => handleRemoveOrder(order.order_id)}>Remove Order</button>
+                </>
+              )}
             </div>
           ))
         ) : (
